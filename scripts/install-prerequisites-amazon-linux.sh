@@ -30,11 +30,18 @@ else
     yum install git -y
     yum install vim -y
 
+    echo
+    echo "Preparing SaltStack for Amazon Linux..."
+    echo
+
+    yum install https://repo.saltstack.com/yum/amazon/salt-amzn-repo-latest-2.amzn1.noarch.rpm
+    yum clean expire-cache
+
   fi
   
   if [ "$1" == "master" -o "$1" == "full" ]; then
 
-#    apt-get install -y salt-master
+    yum install salt-master
 
     if [[ $SUDO_COMMAND == "/bin/bash -s"* ]]; then
       ROOT_DIR="$PWD/salt-git-repos"
@@ -76,17 +83,18 @@ else
 #    - ${PILLAR_DIR}/production
 #EOL
 #
-#    service salt-master restart
+    service salt-master restart
+    service salt-minion restart 
 
   fi
   
-#  if [ "$1" == "minion" -o "$1" == "full" ]; then
-#    apt-get install -y salt-minion
-#  fi
-#  
-#  if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" ]; then
-#    git config --global user.name "$2"
-#    git config --global user.email $3
-#  fi
+  if [ "$1" == "minion" -o "$1" == "full" ]; then
+    yum install salt-master
+  fi
+  
+  if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" ]; then
+    git config --global user.name "$2"
+    git config --global user.email $3
+  fi
 
 fi
