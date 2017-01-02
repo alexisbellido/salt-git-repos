@@ -34,14 +34,14 @@ else
     echo "Preparing SaltStack for Amazon Linux..."
     echo
 
-    yum install https://repo.saltstack.com/yum/amazon/salt-amzn-repo-latest-2.amzn1.noarch.rpm
+    yum install https://repo.saltstack.com/yum/amazon/salt-amzn-repo-latest-2.amzn1.noarch.rpm -y
     yum clean expire-cache
 
   fi
   
   if [ "$1" == "master" -o "$1" == "full" ]; then
 
-    yum install salt-master
+    yum install salt-master -y
 
     if [[ $SUDO_COMMAND == "/bin/bash -s"* ]]; then
       ROOT_DIR="$PWD/salt-git-repos"
@@ -65,36 +65,36 @@ else
       cp -r $ROOT_DIR/conf/srv/pillar/* $PILLAR_DIR
     fi
 
-#    sed -i '/^# Added by install script$/,$d' /etc/salt/master
-#    cat >> /etc/salt/master << EOL
-#
-## Added by install script
-#file_roots:
-#  base:
-#    - /srv/salt
-#    - ${ROOT_DIR}
-#
-#pillar_roots:
-#  base:
-#    - ${PILLAR_DIR}
-#  staging:
-#    - ${PILLAR_DIR}/staging
-#  production:
-#    - ${PILLAR_DIR}/production
-#EOL
-#
+    sed -i '/^# Added by install script$/,$d' /etc/salt/master
+    cat >> /etc/salt/master << EOL
+
+# Added by install script
+file_roots:
+  base:
+    - /srv/salt
+    - ${ROOT_DIR}
+
+pillar_roots:
+  base:
+    - ${PILLAR_DIR}
+  staging:
+    - ${PILLAR_DIR}/staging
+  production:
+    - ${PILLAR_DIR}/production
+EOL
+
     service salt-master restart
-    service salt-minion restart 
 
   fi
   
   if [ "$1" == "minion" -o "$1" == "full" ]; then
-    yum install salt-master
+    yum install salt-minion -y
+    service salt-minion restart 
   fi
   
   if [ "$1" == "minion" -o "$1" == "master" -o "$1" == "full" ]; then
-    git config --global user.name "$2"
-    git config --global user.email $3
+    sudo -u $SUDO_USER git config --global user.name "$2"
+    sudo -u $SUDO_USER git config --global user.email $3
   fi
 
 fi
