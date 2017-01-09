@@ -1,5 +1,14 @@
-django:
+{% set user = 'ec2-user' %}
+{% set group = 'ec2-user' %}
+
+gitrepos:
   lookup:
+    app_user: {{ user }}
+    app_group: {{ group }}
+    root_user: root
+    project:
+      name: default_project_name
+      pyvenvs_dir: pyvenvs
     # This is the Django project
     # The env variable determines DJANGO_SETTINGS_MODULE used
     env: local

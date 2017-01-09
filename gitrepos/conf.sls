@@ -1,12 +1,8 @@
-{% from "zinibu/map.jinja" import django with context %}
-{% from "zinibu/map.jinja" import zinibu_basic with context %}
+{% from "gitrepos/map.jinja" import gitrepos with context %}
 
-include:
-  - zinibu.django.git_setup
-
-{% set project_dir = '/home/' + zinibu_basic.app_user + '/' + zinibu_basic.project.name %}
-{% set pyvenvs_dir = '/home/' + zinibu_basic.app_user + '/' + salt['pillar.get']('zinibu_basic:project:pyvenvs_dir', 'pyvenvs') %}
-{% set pyvenv_name = salt['pillar.get']('zinibu_basic:project:name', 'venv') %}
+{% set project_dir = '/home/' + gitrepos.app_user + '/' + gitrepos.project.name %}
+{% set pyvenvs_dir = '/home/' + gitrepos.app_user + '/' + salt['pillar.get']('gitrepos:project:pyvenvs_dir', 'pyvenvs') %}
+{% set pyvenv_name = salt['pillar.get']('gitrepos:project:name', 'venv') %}
 
 # This is used with salt-run state.orchestrate zinibu.deploy, see README.rst,
 # which is used only after the initial install has been done.
@@ -35,8 +31,8 @@ deploying-package-{{ pip_package }} :
 create_django_app_directory_{{ pip_package }}:
   file.directory:
     - name: {{ pip_package }}
-    - user: {{ zinibu_basic.app_user }}
-    - group: {{ zinibu_basic.app_group }}
+    - user: {{ gitrepos.app_user }}
+    - group: {{ gitrepos.app_group }}
     - mode: 755
     - makedirs: True
 
@@ -48,9 +44,9 @@ clone-django-app-repo-{{ pip_package }}:
     - rev: {{ properties.branch }}
     - branch: {{ properties.branch }}
 {%- endif %} # branch
-    - user: {{ zinibu_basic.app_user }}
+    - user: {{ gitrepos.app_user }}
     - target: {{ pip_package }}
-    - identity: /home/{{ zinibu_basic.app_user }}/.ssh/id_rsa
+    - identity: /home/{{ gitrepos.app_user }}/.ssh/id_rsa
     - force_checkout: True
     - force_clone: True
     - force_reset: True
@@ -69,7 +65,7 @@ django-install-pip-package-{{ pip_package }}:
   pip.installed:
     - name: {{ pip_package }}
     - bin_env: {{ pyvenvs_dir }}/{{ pyvenv_name }}
-    - user: {{ zinibu_basic.app_user }}
+    - user: {{ gitrepos.app_user }}
     - upgrade: True
     {%- if 'editable' in properties %}
     - editable: {{ pip_package }}
