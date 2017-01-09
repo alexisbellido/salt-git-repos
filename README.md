@@ -43,8 +43,11 @@ An installation of type full or master will also copy basic top.sls to /srv/salt
 Configure minions and master
 =================================================
 
-Edit the id for each minion in /etc/salt/minion and restart the minion service:
+Add the private IP of the salt host to the /etc/hosts file in each minion, like this:
 
+  `` 172.31.52.123 salt``
+
+Edit the id for each minion in /etc/salt/minion and restart the minion service:
 
   ``sudo service salt-minion restart``
 
