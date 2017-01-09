@@ -77,10 +77,6 @@ file_roots:
 pillar_roots:
   base:
     - ${PILLAR_DIR}
-  staging:
-    - ${PILLAR_DIR}/staging
-  production:
-    - ${PILLAR_DIR}/production
 EOL
 
     service salt-master restart

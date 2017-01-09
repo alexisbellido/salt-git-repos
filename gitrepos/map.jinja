@@ -1,0 +1,22 @@
+{% set gitrepos = salt['grains.filter_by']({
+    'Debian': {
+        'env': 'localDebian',
+        'app_user': 'default_user_Debian',
+        'app_group': 'default_group',
+        'root_user': 'root',
+        'project': {
+            'name': 'default_project_name',
+            'pyvenvs_dir': 'pyvenvs'
+        }
+    },
+    'RedHat': {
+        'env': 'localRedHat',
+        'app_user': 'default_user_RedHat',
+        'app_group': 'default_group',
+        'root_user': 'root',
+        'project': {
+            'name': 'default_project_name',
+            'pyvenvs_dir': 'pyvenvs'
+        }
+    },
+}, merge=salt['pillar.get']('gitrepos:lookup')) %}
