@@ -60,6 +60,10 @@ Add minions' keys to the master:
   ``sudo salt-key -a MINION_ID``
   ``sudo salt '*' test.ping``
 
+Clone all the repositories:
+
+  ``salt '*' state.apply``
+
 
 Some test commands
 =================================================

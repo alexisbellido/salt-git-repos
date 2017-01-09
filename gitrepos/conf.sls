@@ -30,9 +30,9 @@ deploying:
 
 clone-git-repo:
   git.latest:
-    - name: {{ gitreposrepo }}
-    - rev: {{ gitreposbranch }}
-    - branch: {{ gitreposbranch }}
+    - name: {{ gitrepos.repo }}
+    - rev: {{ gitrepos.branch }}
+    - branch: {{ gitrepos.branch }}
     - user: {{ gitrepos.app_user }}
     - target: {{ project_dir }}
     - identity: /home/{{ gitrepos.app_user }}/.ssh/id_rsa
@@ -47,7 +47,7 @@ clone-git-repo:
 {% endif %}
 
 {%- if 'pip_packages' in gitrepos%}
-  {%- for pip_package, properties in gitrepospip_packages.iteritems() %}
+  {%- for pip_package, properties in gitrepos.pip_packages.iteritems() %}
 
     {%- if deploy %}
       {%- if (apps|length and pip_package in apps) or not apps %}
@@ -65,7 +65,7 @@ deploying-package-{{ pip_package }} :
 # We just clone editable Python packages
 {%- if 'editable' in properties %}
 
-create_gitreposapp_directory_{{ pip_package }}:
+create_django_app_directory_{{ pip_package }}:
   file.directory:
     - name: {{ pip_package }}
     - user: {{ gitrepos.app_user }}
@@ -74,7 +74,7 @@ create_gitreposapp_directory_{{ pip_package }}:
     - makedirs: True
 
 {%- if (apps|length and pip_package in apps) or not apps %}
-clone-gitreposapp-repo-{{ pip_package }}:
+clone-django-app-repo-{{ pip_package }}:
   git.latest:
     - name: {{ properties.repo }}
 {%- if 'branch' in properties %}
@@ -89,7 +89,7 @@ clone-gitreposapp-repo-{{ pip_package }}:
     - force_reset: True
 {% if not deploy %}
     - require:
-      - file: create_gitreposapp_directory_{{ pip_package }}
+      - file: create_django_app_directory_{{ pip_package }}
       - git: setup-git-user-name
       - git: setup-git-user-email
 {%- endif %} # not deploy
