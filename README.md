@@ -49,7 +49,7 @@ Edit the id for each minion in /etc/salt/minion and restart the minion service:
   ``sudo service salt-minion restart``
 
 
-Verify the states and targets are correct in /srv/salt/top.sls, add your git repositories /srv/pillar/gitrepos.sls and restart the master service:
+Verify the states and targets are correct in /srv/salt/top.sls, add your git repositories to /srv/pillar/gitrepos.sls (I like to have a copy with the correct data in my private project repository) and restart the master service:
 
 
   ``sudo service salt-master restart``
